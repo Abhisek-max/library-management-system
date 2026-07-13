@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-head">
+    <div>
+        <p class="eyebrow">CIRCULATION DESK</p>
+        <h1>Quick Issue Book</h1>
+        <p>Issue a book by entering its ISBN/barcode and selecting the return date.</p>
+    </div>
+
+    <a class="btn btn-light" href="{% url 'transactions:manage' %}">
+        View All Transactions
+    </a>
+</div>
+
+<div class="form-card narrow">
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">ISBN / Barcode</label>
+            <input
+                type="text"
+                class="form-control"
+                name="identifier"
+                placeholder="Scan or enter ISBN"
+                autofocus
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Member Username</label>
+            <input
+                type="text"
+                class="form-control"
+                name="member"
+                placeholder="Student or Faculty Username"
+                required>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Due Date</label>
+            <input
+                type="date"
+                class="form-control"
+                name="due_date"
+                required>
+        </div>
+
+        <button class="btn btn-primary">
+            Issue Book
+        </button>
+
+    </form>
+
+    <p class="small text-muted mt-3 mb-0">
+        Select the date on which the member must return the book.
+    </p>
+
+</div>
+
+{% endblock %}

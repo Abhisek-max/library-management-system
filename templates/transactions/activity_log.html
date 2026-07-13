@@ -1,0 +1,37 @@
+{% extends 'base.html' %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">SYSTEM HISTORY</p>
+        <h1>Audit log</h1>
+        <p>A traceable record of borrowing and staff activity.</p>
+    </div>
+</div>
+<div class="panel">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>Performed by</th>
+            </tr>
+        </thead>
+        <tbody>{% for item in items %}<tr>
+                <td>{{ item.created_at|date:'d M Y, H:i' }}</td>
+                <td><strong>{{ item.action }}</strong></td>
+                <td>{{ item.details|default:'—' }}</td>
+                <td>
+                    {% if item.actor %}
+                    {% if item.actor.get_full_name %}
+                    {{ item.actor.get_full_name }}
+                    {% else %}
+                    {{ item.actor.username }}
+                    {% endif %}
+                    {% else %}
+                    System
+                    {% endif %}
+                </td>
+            </tr>{% empty %}<tr>
+                <td colspan="4">No activity has been logged yet.</td>
+            </tr>{% endfor %}</tbody>
+    </table>
+</div>{% endblock %}

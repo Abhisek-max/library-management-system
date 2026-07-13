@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-head">
+    <div>
+        <p class="eyebrow">{{ user.get_role_display }} PORTAL</p>
+
+        <h1>Good day, {{ user.first_name|default:user.username }}.</h1>
+
+        <p>
+            {% if student %}
+                Everything you need for your reading journey.
+            {% else %}
+                Here is today’s library overview.
+            {% endif %}
+        </p>
+    </div>
+
+    <a class="btn btn-primary" href="{% url 'books:list' %}">
+        Browse catalogue
+    </a>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat">
+        <span>Catalogue</span>
+        <strong>{{ total_books }}</strong>
+        <small>Books managed</small>
+    </div>
+
+    <div class="stat">
+        <span>
+            {% if student %}
+                Active loans
+            {% else %}
+                Available now
+            {% endif %}
+        </span>
+
+        <strong>
+            {% if student %}
+                {{ active_loans }}
+            {% else %}
+                {{ available }}
+            {% endif %}
+        </strong>
+
+        <small>Ready to read</small>
+    </div>
+
+    <div class="stat">
+        <span>Pending requests</span>
+        <strong>{{ pending }}</strong>
+        <small>Awaiting action</small>
+    </div>
+
+    <div class="stat">
+        <span>
+            {% if student %}
+                Current fines
+            {% else %}
+                Issued books
+            {% endif %}
+        </span>
+
+        <strong>
+            {% if student %}
+                ₹{{ fine }}
+            {% else %}
+                {{ active_loans }}
+            {% endif %}
+        </strong>
+
+        <small>Live status</small>
+    </div>
+
+</div>
+
+<div class="row g-4 mt-1">
+
+    <div class="col-lg-7">
+
+        <div class="panel">
+
+            <h4>Recent activity</h4>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+
+                            <th>
+                                {% if not student %}
+                                    Member
+                                {% else %}
+                                    Due date
+                                {% endif %}
+                            </th>
+
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for loan in recent %}
+
+                        <tr>
+                            <td>{{ loan.book.title }}</td>
+
+                            <td>
+                                {% if student %}
+                                    {{ loan.due_date|default:"Awaiting issue" }}
+                                {% else %}
+                                    {{ loan.student.username }}
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="badge text-bg-light">
+                                    {{ loan.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="3" class="text-muted">
+                                No activity yet.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-5">
+
+        <div class="panel">
+
+            <h4>
+                {% if student %}
+                    Notifications
+                {% else %}
+                    Books by category
+                {% endif %}
+            </h4>
+
+            {% if student %}
+
+                {% for note in notifications %}
+
+                    <div class="note">
+                        <strong>{{ note.title }}</strong><br>
+                        <small>{{ note.body }}</small>
+                    </div>
+
+                {% empty %}
+
+                    <p class="text-muted">
+                        You're all caught up.
+                    </p>
+
+                {% endfor %}
+
+            {% else %}
+
+                <canvas id="categoryChart"></canvas>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% if not student %}
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: {{ chart_labels|safe }},
+                    datasets: [{
+                        data: {{ chart_values|safe }},
+                        backgroundColor: [
+                            '#275df5',
+                            '#6e8eff',
+                            '#85d5c8',
+                            '#f5b971',
+                            '#b18cf0',
+                            '#ef8d9c'
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        </script>
+
+    {% endif %}
+
+{% endblock %}
