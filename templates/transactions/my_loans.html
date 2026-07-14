@@ -1,1 +1,34 @@
-{% extends 'base.html' %}{% block content %}<div class="page-head"><div><h1>My borrowing</h1><p>Track requests, due dates and fines.</p></div><a class="btn btn-primary" href="{% url 'books:list' %}">Find a book</a></div><div class="panel"><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Book</th><th>Requested</th><th>Due date</th><th>Fine</th><th>Status</th><th></th></tr></thead><tbody>{% for loan in loans %}<tr><td><strong>{{ loan.book.title }}</strong></td><td>{{ loan.requested_at|date:'d M Y' }}</td><td>{{ loan.due_date|default:'—' }}</td><td>₹{{ loan.calculate_fine }}</td><td><span class="badge text-bg-light">{{ loan.get_status_display }}</span></td><td>{% if loan.status == 'ISSUED' %}<form method="post" action="{% url 'transactions:renew' loan.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-primary">Renew</button></form>{% endif %}</td></tr>{% empty %}<tr><td colspan="6" class="text-muted">No loans yet.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div class="page-head">
+    <div>
+        <h1>My borrowing</h1>
+        <p>Track requests, due dates and fines.</p>
+    </div><a class="btn btn-primary" href="{% url 'books:list' %}">Find a book</a>
+</div>
+<div class="panel">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Requested</th>
+                    <th>Due date</th>
+                    <th>Fine</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>{% for loan in loans %}<tr>
+                    <td><strong>{{ loan.book.title }}</strong></td>
+                    <td>{{ loan.requested_at|date:'d M Y' }}</td>
+                    <td>{{ loan.due_date|default:'—' }}</td>
+                    <td>₹{{ loan.calculate_fine }}</td>
+                    <td><span class="badge text-bg-light">{{ loan.get_status_display }}</span></td>
+                    <td>{% if loan.status == 'ISSUED' %}<form method="post"
+                            action="{% url 'transactions:renew' loan.pk %}">{% csrf_token %}<button
+                                class="btn btn-sm btn-outline-primary">Renew</button></form>{% endif %}</td>
+                </tr>{% empty %}<tr>
+                    <td colspan="6" class="text-muted">No loans yet.</td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>{% endblock %}

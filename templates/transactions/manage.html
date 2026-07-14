@@ -1,1 +1,39 @@
-{% extends 'base.html' %}{% block content %}<div class="page-head"><div><h1>Transactions</h1><p>Approve requests and process returns.</p></div></div><div class="panel"><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Member</th><th>Book</th><th>Requested</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead><tbody>{% for loan in loans %}<tr><td>{{ loan.student.get_full_name|default:loan.student.username }}</td><td>{{ loan.book.title }}</td><td>{{ loan.requested_at|date:'d M' }}</td><td>{{ loan.due_date|default:'—' }}</td><td><span class="badge text-bg-light">{{ loan.get_status_display }}</span></td><td class="d-flex gap-1">{% if loan.status == 'PENDING' %}<form method="post" action="{% url 'transactions:action' loan.pk 'approve' %}">{% csrf_token %}<button class="btn btn-sm btn-primary">Issue</button></form><form method="post" action="{% url 'transactions:action' loan.pk 'reject' %}">{% csrf_token %}<button class="btn btn-sm btn-light">Reject</button></form>{% elif loan.status == 'ISSUED' %}<form method="post" action="{% url 'transactions:action' loan.pk 'return' %}">{% csrf_token %}<button class="btn btn-sm btn-success">Receive return</button></form>{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No transactions.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div class="page-head">
+    <div>
+        <h1>Transactions</h1>
+        <p>Approve requests and process returns.</p>
+    </div>
+</div>
+<div class="panel">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Book</th>
+                    <th>Requested</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>{% for loan in loans %}<tr>
+                    <td>{{ loan.student.get_full_name|default:loan.student.username }}</td>
+                    <td>{{ loan.book.title }}</td>
+                    <td>{{ loan.requested_at|date:'d M' }}</td>
+                    <td>{{ loan.due_date|default:'—' }}</td>
+                    <td><span class="badge text-bg-light">{{ loan.get_status_display }}</span></td>
+                    <td class="d-flex gap-1">{% if loan.status == 'PENDING' %}<form method="post"
+                            action="{% url 'transactions:action' loan.pk 'approve' %}">{% csrf_token %}<button
+                                class="btn btn-sm btn-primary">Issue</button></form>
+                        <form method="post" action="{% url 'transactions:action' loan.pk 'reject' %}">{% csrf_token
+                            %}<button class="btn btn-sm btn-light">Reject</button></form>{% elif loan.status == 'ISSUED'
+                        %}<form method="post" action="{% url 'transactions:action' loan.pk 'return' %}">{% csrf_token
+                            %}<button class="btn btn-sm btn-success">Receive return</button></form>{% endif %}
+                    </td>
+                </tr>{% empty %}<tr>
+                    <td colspan="6">No transactions.</td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</div>{% endblock %}

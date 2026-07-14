@@ -92,6 +92,13 @@ body {
     padding: 0 38px
 }
 
+#menuToggle {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .profile-btn {
     background: #f4f0fa;
     border: 0;
@@ -325,80 +332,89 @@ body {
     font-size: 14px
 }
 
-@media(max-width:900px) {
-    .sidebar {
-        width: 70px;
-        padding: 20px 9px
+@media(max-width:900px){
+
+    .content{
+        padding:24px;
     }
 
-    .sidebar .brand {
-        font-size: 0
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .sidebar .brand span {
-        font-size: 18px
-    }
-
-    .sidebar a:not(.brand),
-    .side-label {
-        font-size: 0;
-        padding: 13px
-    }
-
-    .content {
-        padding: 24px
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr)
-    }
 }
 
-@media(max-width:600px) {
-    .sidebar {
-        display: none
+@media (max-width:600px){
+
+    .app-shell{
+        display:block;
     }
 
-    .content {
-        padding: 18px
+    .sidebar{
+        position:fixed;
+        top:0;
+        left:-260px;
+        width:260px;
+        height:100vh;
+        padding:25px 18px;
+        overflow-y:auto;
+        transition:left .3s ease;
+        z-index:9999;
     }
 
-    .topbar {
-        padding: 0 18px
+    .sidebar.show-sidebar{
+        left:0;
     }
 
-    .page-head {
-        align-items: flex-start;
-        gap: 14px
+    #menuToggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        margin-right:12px;
     }
 
-    .page-head h1 {
-        font-size: 24px
+    .topbar{
+        padding:0 15px;
+        justify-content:space-between;
     }
 
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px
+    .content{
+        padding:18px;
     }
 
-    .stat {
-        padding: 14px
+    .page-head{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:14px;
     }
 
-    .detail-card {
-        grid-template-columns: 1fr;
-        padding: 18px
+    .page-head h1{
+        font-size:24px;
     }
 
-    .detail-cover {
-        height: 230px
+    .stats-grid{
+        grid-template-columns:1fr;
     }
 
-    .meta-grid {
-        grid-template-columns: 1fr
+    .detail-card{
+        grid-template-columns:1fr;
+        padding:18px;
     }
 
-    .form-card {
-        padding: 20px
+    .detail-cover{
+        height:230px;
     }
+
+    .meta-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-card{
+        padding:20px;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+
 }
