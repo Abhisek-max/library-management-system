@@ -6,7 +6,7 @@ import cloudinary.api
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-me-before-production')
-DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
+DEBUG = True
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver').split(',')
 INSTALLED_APPS = [
     'django.contrib.admin',
